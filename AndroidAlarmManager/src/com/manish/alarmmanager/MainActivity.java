@@ -22,6 +22,8 @@ public class MainActivity extends Activity implements OnClickListener{
 
 	Button btnStartAlarm,btnStopAlarm;
 	Context context;
+	static PendingIntent pendingIntent;
+	static AlarmManager alarmManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,13 @@ public class MainActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_main);
 		context=MainActivity.this;
 		
+
+		Intent intentsOpen = new Intent(this, AlarmReceiver.class);
+		intentsOpen.setAction("com.manish.alarm.ACTION");
+		pendingIntent = PendingIntent.getBroadcast(this,111, intentsOpen, 0);
+		alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+
 		btnStartAlarm=(Button)findViewById(R.id.button1);
 		btnStopAlarm=(Button)findViewById(R.id.button2);
 		
@@ -50,21 +59,17 @@ public class MainActivity extends Activity implements OnClickListener{
 		/**
 		 * call broadcost reciver
 		 */
-		Intent intent = new Intent(context, AlarmReceiver.class);
-		intent.setAction("com.manish.alarm.ACTION");
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 111, intent,0);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		AlarmManager alarm = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
-		alarm.cancel(pendingIntent);
-		alarm.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),100000, pendingIntent);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 10000, pendingIntent);
+		
+		
 	}
 	public void stopAlarm(){
+				alarmManager.cancel(pendingIntent);
 		
-		Intent intent = new Intent(context, AlarmReceiver.class);
-		PendingIntent sender = PendingIntent.getBroadcast(context, 111, intent, 0);
-		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-		alarmManager.cancel(sender);
+		
+		
 	}
 
 

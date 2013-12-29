@@ -12,7 +12,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-
+		generateNotification(context,"Hi how are you?");
 		String action = intent.getAction();
 		if (SOMEACTION.equals(action)) {
 			//do what you want here
